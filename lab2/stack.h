@@ -8,9 +8,7 @@ private:
     int topIndex, capacity;
 
 public:
-    Stack(int capacity);
-    Stack(const Stack& oStack);
-    Stack& operator = (const Stack& oStack);
+    Stack(); 
     ~Stack();
     void push(int elem);
     int pop();
