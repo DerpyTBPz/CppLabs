@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ARRAY_H
+#define ARRAY_H
 
 class Array
 {
@@ -17,3 +18,4 @@ public:
     void setArray(int *pArr, int size);  
 };
 
+#endif
