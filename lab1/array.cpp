@@ -1,27 +1,11 @@
 #include "array.h"
 #include <iostream>
 
-// ----------------------------<array.h>----------------------------
-// class array                                                      |
-// {                                                                |
-// public:                                                          |
-//     void showElements();                                         +
-//     void expandArray(int size);                                  |
-//     int getSize();                                               +
-//     int getElemSize();                                           +
-//     void setValue(int val);                                      |
-//     void setArray(int *pArr, int size);                          +
-// private:                                                         |
-//     int* clArr;                                                  |
-//     int clK, clI, clSize;                                        |
-// };                                                               |
-// -------------------------------------------------------------------
-
-Array::Array(int size, int step)
+Array::Array()
 {
-    this->initSize = initSize;
-    this->step = step;
-    this->clArr = new int[size];
+    this->initSize = 20;
+    this->step = 20;
+    this->clArr = new int[20];
     this->index = 0;
     this->size = initSize;
     this->elemSize = 0;
@@ -51,8 +35,7 @@ void Array::expandArray(int size)
     
     delete[] clArr;
     clArr = tmp;    
-    this->size = size;
-    std::cout << getSize() << "\n"; 
+    this->size = size;    
 }
 
 int Array::getSize()
@@ -78,6 +61,8 @@ void Array::setValue(int val)
 
 void Array::setArray(int *pArr, int size)
 {    
+    int* tmp = new int[size + step];
+    int k = 0;
     if (size > this->size)
     {
         expandArray(size);
@@ -86,6 +71,20 @@ void Array::setArray(int *pArr, int size)
     {
         clArr[i] = pArr[i];
     }
+
+    for (int i = 0; i < size; i++)
+    {
+        tmp[i] = pArr[i];
+        k++;
+    }
+    for (int i = 0; i < size; i++)
+    {
+        tmp[k + i] = clArr[i];
+    }
+    delete[] clArr;
+    clArr = tmp;
+    delete[] tmp;
+
     index = size;
     elemSize = size;
 }

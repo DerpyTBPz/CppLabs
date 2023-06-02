@@ -8,7 +8,7 @@ private:
     int *clArr;   
 
 public:
-    Array(int size, int step);
+    Array();
     ~Array();
     void showElements();
     void expandArray(int size);

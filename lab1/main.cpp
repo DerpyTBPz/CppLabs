@@ -4,7 +4,7 @@
 
 int main()
 {      
-    Array arr(5, 5);
+    Array arr;
     int A[9] = {6, 6, 6, 6, 6, 6, 6, 6, 6};
 
     arr.setValue(10);
