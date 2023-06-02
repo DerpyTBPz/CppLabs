@@ -61,23 +61,23 @@ void Array::setValue(int val)
 
 void Array::setArray(int *pArr, int size)
 {    
-    int* tmp = new int[size + step];
+    int* tmp = new int[size];
     int k = 0;
-    if (size > this->size)
+    if ((size) > this->size)
     {
         expandArray(size);
     }
-    for (int i = 0; i < size; i++)
-    {
-        clArr[i] = pArr[i];
-    }
+    // for (int i = 0; i < size; i++)
+    // {
+    //     clArr[i] = pArr[i];
+    // }
 
     for (int i = 0; i < size; i++)
     {
         tmp[i] = pArr[i];
         k++;
     }
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < this->size; i++)
     {
         tmp[k + i] = clArr[i];
     }
