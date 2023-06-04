@@ -1,91 +1,109 @@
 #include <iostream>
 #include <cmath>
-#include <fstream>
-#include <string>
 #include "vector.h"
 
 Vector::Vector()
 {
-    this->x = 0;
-    this->y = 0;
-    this->z = 0;
-} //: x(0), y(0), z(0) {}
+    
+}
 
-Vector::Vector(double xVal, double yVal, double zVal)
+Vector::Vector(std::string name, int xVal, int yVal)
 {
+    this->name = name;
     this->x = xVal;
-    this->y = yVal;
-    this->z = zVal;
-}// : x(xVal), y(yVal), z(zVal) {}
-
-double Vector::getMagnitude() const
-{
-    return std::sqrt(x*x + y*y + z*z);
+    this->y = yVal;   
 }
 
-double Vector::getDotProduct(const Vector& other) const
+Vector::~Vector()
 {
-    return x*other.x + y*other.y + z*other.z;
+
 }
 
-Vector Vector::add(const Vector& other) const
+double Vector::module() const
 {
-    return Vector(x + other.x, y + other.y, z + other.z);
+    return std::sqrt((x * x) + (y * y));
 }
 
-Vector Vector::subtract(const Vector& other) const
-{
-    return Vector(x * other.x, y * other.y, z * other.z);
+int Vector::scalarProduct(const Vector& other) const
+{   
+    return (x * other.x) + (y * other.y);
 }
 
-Vector Vector::multiply(double scalar) const
+Vector Vector::sumWith(const Vector& other) const
 {
-    return Vector(x * scalar, y * scalar, z * scalar);
+    return Vector(name + "+" + other.name,x + other.x, y + other.y);
 }
 
-bool Vector::areCollinear(const Vector &other) const
+Vector Vector::subtractWith(const Vector& other) const
 {
-    return getDotProduct(other) == 0;
+    return Vector(name + "-" + other.name,x - other.x, y - other.y);
 }
 
-bool Vector::areOrthogonal(const Vector& other) const
+Vector Vector::multiplyBy(int scalar) const
 {
-    return getDotProduct(other) == 0;
+    return Vector(name + "*" + std::to_string(scalar), x * scalar, y * scalar);
 }
 
-void Vector::setX(double newX)
+bool Vector::areCollinearWith(const Vector &other) const
+{
+    double a, b;
+    if ((x/other.x) == (y/other.y))
+    {
+        return true;
+    }
+    else 
+    {
+        return false;
+    }
+    
+}
+
+bool Vector::areOrthogonalWith(const Vector& other) const
+{
+    if (((((x * other.x) + (y * other.y)) / (module()*other.module())) == 90) || (scalarProduct(other) == 0))
+    {
+        return true;
+    }
+    else 
+    {    
+        return false;   
+    }   
+}
+
+
+void Vector::setName(std::string newName)
+{
+    name = newName;
+}
+
+void Vector::setX(int newX)
 {
     x = newX;
 }
 
-void Vector::setY(double newY)
+void Vector::setY(int newY)
 {
     y = newY;
 }
 
-void Vector::setZ(double newZ)
+std::string Vector::getName() const
 {
-    z = newZ;
+    return name;
 }
-
-double Vector::getX() const
+int Vector::getX() const
 {
     return x;
 }
 
-double Vector::getY() const
+int Vector::getY() const
 {
     return y;
 }
 
-double Vector::getZ() const
-{
-    return z;
-}
 
 std::string Vector::toString() const
 {
-    return "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")";
+    return name + "(" + std::to_string(x) + ",\t" + std::to_string(y) + ")";
 }
 
 std::ostream& operator<<(std::ostream& os, const Vector& vec)

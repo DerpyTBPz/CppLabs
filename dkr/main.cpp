@@ -1,47 +1,310 @@
 #include <iostream>
+#include <string>
+
 #include "vector.h"
-#include "filehandler.h"
+#include "database.h"
+
+#define MAX_COUNT 100
 
 int main()
 {
-    Vector v1(1, 2, 3);
-    Vector v2(4, 5, 6);
+    Vector vectors[MAX_COUNT];
+    DB database;
+    Log log;
+    int var, index = 0;
+    while(true)
+    {
+        std::cout << "Choose data fill \n\t1) Standart \n\t2) Manual \n" << std::endl;
+        std::cin >> var;
 
-    std::cout << "Magnitude of v1: " << v1.getMagnitude() << std::endl;
-    std::cout << "Magnitude of v2: " << v2.getMagnitude() << std::endl;
+        if (var == 1)
+        {
+            vectors[0] = Vector("A", 1, 2);
+            vectors[1] = Vector("B", 2, 4);
+            vectors[2] = Vector("C", 9, 22);
+            vectors[3] = Vector("D", 21, 16);
+            vectors[4] = Vector("E", 42, 10);
+            vectors[5] = Vector("F", 11, 5);
+            vectors[6] = Vector("G", 1, 2);
+            vectors[7] = Vector("H", 2, -1);
+            index = 8;
+            log.Add("Added standart amount(8) of vectors");
+            break;
+        }
+        else if (var == 2)
+        {
+            while(true)
+            {
+                std::string tmp_name;
+                int tmp_x, tmp_y;
 
-    std::cout << "Dot product of v1 and v2: " << v1.getDotProduct(v2) << std::endl;
+                std::cout << "\nEnter name of vector: ";
+                std::cin >> tmp_name;
+                vectors[index].setName(tmp_name);
 
-    Vector sum = v1.add(v2);
-    std::cout << "Sum of v1 and v2: " << sum << std::endl;
+                std::cout << "\nEnter X: ";
+                std::cin >> tmp_x;
+                vectors[index].setX(tmp_x);
 
-    Vector difference = v1.subtract(v2);
-    std::cout << "Difference between v1 and v2: " << difference << std::endl;
+                std::cout << "\nEnter Y: ";
+                std::cin >> tmp_y;
+                vectors[index].setY(tmp_y);
 
-    Vector multiplied = v1.multiply(2.5);
-    std::cout << "Multiplication of v1 by 2.5: " << multiplied << std::endl;
+                index++;
 
-    if (v1.areCollinear(v2)) {
-        std::cout << "v1 and v2 are collinear." << std::endl;
-    } else {
-        std::cout << "v1 and v2 are not collinear." << std::endl;
+                log.Add("Added 1 vector");
+
+                std::cout << "Do you want to continue? (1-no, else-yes)";
+                std::cin >> var;
+                if (var == 1)
+                {
+                    break;
+                }
+            }
+            break;
+        }        
     }
 
-    if (v1.areOrthogonal(v2)) {
-        std::cout << "v1 and v2 are orthogonal." << std::endl;
-    } else {
-        std::cout << "v1 and v2 are not orthogonal." << std::endl;
+    std::cout << "\n--------------------------\n\n";
+    for (int i = 0; i < index; i++)
+    {
+        std::cout << i << "\t" << vectors[i] << std::endl;
     }
-    
-    std::string v1Data = v1.toString();
-    std::string v2Data = v2.toString();
+    std::cout << "\n--------------------------\n\n";
 
-    std::string encryptedV1Data = FileHandler::encryptData(v1Data);
-    std::string encryptedV2Data = FileHandler::encryptData(v2Data);
+    while(true)
+    {
+        std::cout << "Choose action with vectors: \n\t1) Get module of vector"
+                                                 "\n\t2) Get Scalar Product of vectors"
+                                                 "\n\t3) Sum two vectors"
+                                                 "\n\t4) Subtract two vectors"
+                                                 "\n\t5) Multiply vector by"
+                                                 "\n\t6) Check if vectors are Collinear"
+                                                 "\n\t7) Check if vectors are Orthogonal\n"
+                                                 "\n\t8) Output vectors"
+                                                 "\n\t9) Push to DB\n"                                                 
+                                                 "\n\t0) Exit" 
+                                                 << std::endl;
+        std::cin >> var;
+        if (var == 1)
+        {
+            int num;
+            std::cout << "Enter vector number (in table above): ";
+            std::cin >> num;
+            if ((num < index) && (num >= 0))
+            {
+                std::cout << "|" << vectors[num].getName() << "| = " << vectors[num].module() << std::endl;
+            }
+            else 
+            {
+                std::cout << "\nWrong number!\n";
+            }
+            log.Add("Calculated modul of vector: " + std::to_string(num));
 
-    FileHandler::saveData("vector1.txt", encryptedV1Data);
-    FileHandler::saveData("vector2.txt", encryptedV2Data);
+        }
+        else if (var == 2)
+        {
+            int num1, num2;            
 
-    return 0;
-    
+            std::cout << "Enter first vector number: ";
+            std::cin >> num1;           
+            
+            if ((num1 < index) && (num1 >= 0))
+            {
+                std::cout << "Enter second vector number: ";
+                std::cin >> num2;
+
+                if ((num2 < index) && (num2 >= 0))
+                {
+                    std::cout << vectors[num1].getName() << "*" << vectors[num2].getName() << " = "<< vectors[num1].scalarProduct(vectors[num2]) << std::endl;
+                }
+                else 
+                {
+                    std::cout << "\nWrong number!\n";
+                }                
+            }
+            else 
+            {
+                std::cout << "\nWrong number!\n";
+            }
+            log.Add("Calculated scalar product of vectors: " + std::to_string(num1) + ", " + std::to_string(num2));
+        }
+        else if (var == 3)
+        {
+            int num1, num2;
+
+            std::cout << "Enter first vector number: ";
+            std::cin >> num1;
+
+            if ((num1 < index) && (num1 >= 0))
+            {
+                std::cout << "Enter second vector number: ";
+                std::cin >> num2;
+
+                if ((num2 < index) && (num2 >= 0))
+                {
+                    vectors[index] = vectors[num1].sumWith(vectors[num2]);
+                    std::cout << vectors[index] << std::endl;
+                    index++;
+                }
+                else 
+                {
+                    std::cout << "\nWrong number!\n";
+                }                
+            }
+            else 
+            {
+                std::cout << "\nWrong number!\n";
+            }
+            log.Add("Calculated sum of vectors: " + std::to_string(num1) + ", " + std::to_string(num2));
+        }
+        else if (var == 4)
+        {
+            int num1, num2;
+
+            std::cout << "Enter first vector number: ";
+            std::cin >> num1;
+
+            if ((num1 < index) && (num1 >= 0))
+            {
+                std::cout << "Enter second vector number: ";
+                std::cin >> num2;
+
+                if ((num2 < index) && (num2 >= 0))
+                {
+                    vectors[index] = vectors[num1].subtractWith(vectors[num2]);
+                    std::cout << vectors[index] << std::endl;
+                    index++;
+                }
+                else 
+                {
+                    std::cout << "\nWrong number!\n";
+                }
+            }
+            else 
+            {
+                std::cout << "\nWrong number!\n";
+            }
+            log.Add("Calculated substract of vectors: " + std::to_string(num1) + ", " + std::to_string(num2));
+        }
+        else if (var == 5)
+        {
+            int num1, num2;
+
+            std::cout << "Enter first vector number: ";
+            std::cin >> num1;
+
+            if ((num1 < index) && (num1 >= 0))
+            {
+                std::cout << "Enter multiplayer: ";
+                std::cin >> num2;   
+
+                vectors[index] = vectors[num1].multiplyBy(num2);
+                std::cout << vectors[index] << std::endl;
+                index++;
+                
+            }
+            else 
+            {
+                std::cout << "\nWrong number!\n";
+            }
+            log.Add("Multiplyed by " + std::to_string(num2) + " vector: " + std::to_string(num1));
+        }
+        else if (var == 6)
+        {
+            int num1, num2;
+
+            std::cout << "Enter first vector number: ";
+            std::cin >> num1;
+
+            if ((num1 < index) && (num1 >= 0))
+            {
+                std::cout << "Enter second vector number: ";
+                std::cin >> num2;
+
+                if ((num2 < index) && (num2 >= 0))
+                {
+                    bool isBool = vectors[num1].areCollinearWith(vectors[num2]);
+                    if (isBool == true)
+                    {
+                        std::cout << "\nThis vectors are Collinear\n" << std::endl;
+                    } 
+                    else
+                    {
+                        std::cout << "\nThis vectors aren't Collinear\n" << std::endl;
+                    }                  
+                }
+                else 
+                {
+                    std::cout << "\nWrong number!\n";
+                }
+            }
+            else 
+            {
+                std::cout << "\nWrong number!\n";
+            }
+            log.Add("Testing for collinear vectors: " + std::to_string(num1) + ", " + std::to_string(num2));
+        }
+        else if (var == 7)
+        {
+            int num1, num2;
+
+            std::cout << "Enter first vector number: ";
+            std::cin >> num1;
+
+            if ((num1 < index) && (num1 >= 0))
+            {
+                std::cout << "Enter second vector number: ";
+                std::cin >> num2;
+
+                if ((num2 < index) && (num2 >= 0))
+                {
+                    bool isBool = vectors[num1].areOrthogonalWith(vectors[num2]);
+                    if (isBool == true)
+                    {
+                        std::cout << "\nThis vectors are Orthogonal\n" << std::endl;
+                    }   
+                    else 
+                    {
+                        std::cout << "\nThis vectors aren't Orthogonal\n" << std::endl;     
+                    }                               
+                }
+                else 
+                {
+                    std::cout << "\nWrong number!\n";
+                }
+            }
+            else 
+            {
+                std::cout << "\nWrong number!\n";
+            }
+            log.Add("Testing for Orthogonal vectors: " + std::to_string(num1) + ", " + std::to_string(num2));
+        }
+        else if (var == 8)
+        {
+            std::cout << "\n--------------------------\n";                           
+            for (int i = 0; i < index; i++)
+            {
+                std::cout << i << "\t" << vectors[i] << std::endl;
+            } 
+            std::cout << "\n--------------------------\n\n";
+        }
+        else if (var == 9)
+        {
+            std::cout << "\nProcessing...\n";
+            database.clearDB();
+            for (int i = 0; i < index; i++)
+            {
+                database.insertInDB(vectors, index, i);
+            }
+            std::cout << "\nDone!" << std::endl;
+            log.Add("Pushed to database");
+        }
+        else 
+        {
+            break;
+        }
+    }
+
+    return 0;    
 }
